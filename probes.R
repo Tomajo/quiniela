@@ -31,9 +31,7 @@ for(j in 1:4000){
     print(append('pasta ',pasta))
     print(c('Benefici ',round(100*(pasta/invertit)),' % '))
     print(summary(Encerts))
-    
     Mitjana<-c(Mitjana,round(100*(pasta/invertit)))
-    
 }
 print(c('Benefici mitjà',mean(Mitjana),' %'))
 print(c('Benefici max',max(Mitjana),' %'))
