@@ -8,9 +8,9 @@ library(RMySQL)
 # informació que ensinteressa                                 #
 ###############################################################
 # Agafem aquesta primera URL. Aquesta no la llegirem, és el punt de partida per llegir totes les anteriors.
-doc.html = htmlTreeParse('http://www.loteriasyapuestas.es/es/la-quiniela/sorteos/2016/946506028',useInternalNodes = TRUE)
+doc.html = htmlTreeParse('https://www.loteriasyapuestas.es/es/la-quiniela/sorteos/2016/946506028',useInternalNodes = TRUE)
 
-url<-'http://www.loteriasyapuestas.es'
+url<-'https://www.loteriasyapuestas.es'
 
 
 #obro connexió a la base de dades
@@ -21,8 +21,8 @@ for(i in 1:4000){
     doc.linkA = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[2]/div[1]/a/@href'))
     if(!is.null(doc.linkA)){
         urlActual<-paste(url,doc.linkA,sep = '') 
-        if(urlActual=="http://www.loteriasyapuestas.es/es/la%2Dquiniela/sorteos/2015/919606032"){
-            urlActual<-'http://www.loteriasyapuestas.es/es/la-quiniela/sorteos/2015/919206031'
+        if(urlActual=="https://www.loteriasyapuestas.es/es/la%2Dquiniela/sorteos/2015/919606032"){
+            urlActual<-'https://www.loteriasyapuestas.es/es/la-quiniela/sorteos/2015/919206031'
         }
         #parsejo nova plana 
         doc.html = htmlTreeParse(urlActual,useInternalNodes = TRUE)

@@ -6,7 +6,7 @@ for(j in 1:4000){
     invertit<-0
     for(i in 1:20){
         df <- runif(n=15)
-        df<-df[df[]>0.55]
+        df<-df[df[]>0.6]
         Encerts<-c(Encerts,15-length(df))
         invertit<-invertit+100
     }
