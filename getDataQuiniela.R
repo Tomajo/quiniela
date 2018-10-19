@@ -3,7 +3,8 @@ library(stringr)
 library(RCurl)
 library(RMySQL)
 
-
+#poso en castella per tractar les dates etc
+Sys.setlocale(locale='es_ES.UTF8')
 ###############################################################
 # Llegim la plana de ONLAE de Quinieles i agafem tota la      #
 # informació que ensinteressa                                 #
@@ -30,35 +31,43 @@ for(i in 1:4000){
         
         #Jornada i data
         doc.textA = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[1]/div/h2', xmlValue))
-        #TODO: ojo que la jornada 11 la agafo com la jornada 1, Revisar la expressio regular.
-        doc.jornada<-sub("[0-9],.*", "", doc.textA)
+        
+        doc.jornada<-sub("\\s*,.*", "", doc.textA)
         doc.dataJornada<-sub(".*, ", "", doc.textA)
       
-        #Ojo que no m'agafa la data per problemes de LOCALE
-        # doc.dataJornada<-as.Date(gsub('de','',doc.dataJornada),format = '%A %d %B %Y')
-        # 
-        # #Recaudació 
-        # doc.textB = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[1]/p', xmlValue))
-        # #Ordre de partits
-        # doc.text0 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[1]/li', xmlValue))
+        #agafo data de la jornada
+        doc.dataJornada<-as.Date(gsub('de','',doc.dataJornada),format = '%A %d %B %Y')
+        
+        #apostes
+        doc.textB0 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[1]/p[1]', xmlValue))
+        #Recaudació 
+        doc.textB1 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[1]/p[2]', xmlValue))
+        
+        #Bote
+        doc.textB2 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[1]/p[3]', xmlValue))
+        #Premis
+        doc.textB3 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[1]/p[4]', xmlValue))
+        
+        #Ordre de partits
+        doc.text0 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[1]/li', xmlValue))
         # # Primera columna amb els números de partits
-        # doc.text1 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[1]/li', xmlValue))
+        doc.text1 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[1]/li', xmlValue))
         # # segona columna amb els equips que juguen a casa
-        # doc.text2 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[2]/li', xmlValue))
+        doc.text2 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[2]/li', xmlValue))
         # # Tercera columna amb els equips que juguen fora
-        # doc.text3 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[3]/li', xmlValue))
+        doc.text3 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[3]/li', xmlValue))
         # # Quarta columna amb els resultats en gols
-        # doc.text4 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[4]/ul[1]/li', xmlValue))
+        doc.text4 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[4]/ul[1]/li', xmlValue))
         # # Cinquena columna amb els resultats en 1-X-2
-        # doc.text5 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[4]/ul[2]/li', xmlValue))
+        doc.text5 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[4]/ul[2]/li', xmlValue))
         # #Pleno al quince 1er equip
-        # doc.text6 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[2]/ul[2]/li', xmlValue))
+        doc.text6 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[2]/ul[2]/li', xmlValue))
         # #Pleno al quince 2on equip
-        # doc.text7 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[2]/ul[3]/li', xmlValue))
+        doc.text7 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[2]/ul[3]/li', xmlValue))
         # #Resultat pleno gols
-        # doc.text8 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[3]/ul[1]/li', xmlValue))
-        # #Resultat pleno  1-X-2
-        # doc.text9 = unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[3]/ul[2]/li', xmlValue))
+        doc.text8 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[3]/ul[1]/li', xmlValue))
+        # #Resultat pleno  en format quiniela abreujat M-1 etc
+        doc.text9 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[3]/ul[2]/li', xmlValue))
         # 
         # #Header premis
         # doc.text10 =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/table/tbody/tr[1]/th', xmlValue))
