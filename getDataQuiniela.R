@@ -20,7 +20,7 @@ doc.html = htmlTreeParse(urlhttps,useInternalNodes = TRUE)
 # //*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[2]/li[3]
 
 #obro connexió a la base de dades
-mydb <- dbConnect(MySQL(), user='root', password='B4yesian', dbname='QUINIELA', host='127.0.0.1')
+# mydb <- dbConnect(MySQL(), user='root', password='B4yesian', dbname='QUINIELA', host='127.0.0.1')
 for(i in 1:4000){
     # Sys.sleep(1)
     #agafo url relativa anterior i concateno amb la url de ONLAE
@@ -70,21 +70,21 @@ for(i in 1:4000){
         doc.text9 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[3]/ul[2]/li', xmlValue))
         # 
         # #Header premis
-        # doc.text10 =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/table/tbody/tr[1]/th', xmlValue))
+        doc.text10 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[2]', xmlValue))
         # 
         # #Ple al 15
-        # doc.text11 =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/table/tbody/tr[2]/td', xmlValue))
+        doc.text11 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[2]', xmlValue))
         # 
         # #14 encerts
-        # doc.text12 =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/table/tbody/tr[3]/td', xmlValue))
+        doc.text12 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[3]', xmlValue))
         # #13 encerts
-        # doc.text13 =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/table/tbody/tr[4]/td', xmlValue))
+        doc.text13 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[4]', xmlValue))
         # #12 encerts
-        # doc.text14 =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/table/tbody/tr[5]/td', xmlValue))
+        doc.text14 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[5]', xmlValue))
         # #11 encerts
-        # doc.text15 =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/table/tbody/tr[6]/td', xmlValue))
+        doc.text15 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[6]', xmlValue))
         # #10 encerts
-        # doc.text16 =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[2]/div[1]/table/tbody/tr[7]/td', xmlValue))
+        doc.text16 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[7]', xmlValue))
         # #print(paste(doc.text2[1],doc.text3[1]))
         # 
         # ###########################################################
@@ -93,31 +93,19 @@ for(i in 1:4000){
         # ###########################################################
         # 
         # #agafo link amb la estadistica de apostes que ha fet la gent, em servirà per predir quines apostes tendeix a fer la gent, etc.
-        # doc.linkB =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[3]/div[2]/ul/li/div[2]/ul/li/div/h3/a/@href'))
-        # # print(paste('Agafo txt de la Jornada? ',doc.linkB))
-        # if(length(grep('txt',doc.linkB))==0){
-        #     doc.linkB =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[3]/div[2]/ul/li/div[3]/ul/li/div/h3/a/@href'))
-        #     # print(paste('Agafo txt de la Jornada? 1er if ',doc.linkB))
-        # } 
-        # if(length(grep('txt',doc.linkB))==0){
-        #     doc.linkB =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[3]/div[2]/ul/li/div[4]/ul/li/div/h3/a/@href'))
-        #     # print(paste('Agafo txt de la Jornada? 2on if ',doc.linkB))
-        # } 
-        # if(length(grep('txt',doc.linkB))==0){
-        #     doc.linkB =unlist(xpathApply(doc.html, '//*[@id="subhome"]/div[3]/div[1]/div[1]/div[1]/div[3]/div[3]/div[2]/ul/li/div[5]/ul/li/div/h3/a/@href'))
-        #     # print(paste('Agafo txt de la Jornada? 3er if ',doc.linkB))
-        # }
-        # urlApostesJornada<-paste(url,doc.linkB,sep = '') 
+        doc.linkB =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[3]/div[2]/ul/li/div[3]/ul/li/div/h3/a/@href'))
+
+        urlApostesJornada<-paste(url,doc.linkB,sep = '') 
         # print(paste('Agafo txt de la Jornada? ',doc.linkB))
-        # if(length(grep('txt',doc.linkB))==0) {
+        if(length(grep('txt',doc.linkB))==0) {
         #     print(paste('No agafo txt de la Jornada ',doc.textA))
-        #     mydat<-data.frame(matrix(NA, nrow = 16, ncol = 6))
-        # }else{
-        #     myfile <- getURL(URLencode(urlApostesJornada), ssl.verifyhost=FALSE, ssl.verifypeer=FALSE,.encoding = 'UTF-8',async = TRUE)
-        #     mydat <- read.csv(textConnection(myfile), skip = 2,sep = ';',header = FALSE)
-        #     print(mydat)
+             mydat<-data.frame(matrix(NA, nrow = 16, ncol = 6))
+         }else{
+             myfile <- getURL(URLencode(urlApostesJornada), ssl.verifyhost=FALSE, ssl.verifypeer=FALSE,.encoding = 'UTF-8',async = TRUE)
+            mydat <- read.csv(textConnection(myfile), skip = 2,sep = ';',header = FALSE)
+             # print(mydat)
         #     
-        # } 
+         } 
         # 
         # 
         # ###########################################################
@@ -143,5 +131,5 @@ for(i in 1:4000){
         # dbWriteTable(mydb, 'PREMIS', dfRecPrem, row.names=F, append=T)
     }
 }
-dbDisconnect(mydb)
+# dbDisconnect(mydb)
 
