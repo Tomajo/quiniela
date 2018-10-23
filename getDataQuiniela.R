@@ -11,24 +11,23 @@ Sys.setlocale(locale='es_ES.UTF8')
 ###############################################################
 
 print(url)
-urlhttps <- getURL('https://www.loteriasyapuestas.es/es/la-quiniela/sorteos/2018/1032606047', ssl.verifypeer = FALSE)
+urlhttps <- getURL('https://www.loteriasyapuestas.es/es/la-quiniela/sorteos/2018/1034006050', ssl.verifypeer = FALSE)
 # Agafem aquesta primera URL. Aquesta no la llegirem, és el punt de partida per llegir totes les anteriors.
 doc.html = htmlTreeParse(urlhttps,useInternalNodes = TRUE)
-# doc.html = htmlTreeParse('https://www.loteriasyapuestas.es/es/la-quiniela/sorteos/2018/1032606047',useInternalNodes = TRUE)
 
-# url<-'https://www.loteriasyapuestas.es'
-# //*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[3]/ul[2]/li[3]
 
 #obro connexió a la base de dades
-# mydb <- dbConnect(MySQL(), user='root', password='B4yesian', dbname='QUINIELA', host='127.0.0.1')
+mydb <- dbConnect(MySQL(), user='root', password='B4yesian', dbname='QUINIELA', host='127.0.0.1')
 for(i in 1:4000){
     # Sys.sleep(1)
     #agafo url relativa anterior i concateno amb la url de ONLAE
-    doc.linkA = unlist(xpathApply(doc.html,'//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]'))
+    doc.linkA = unlist(xpathApply(doc.html,'//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[2]/div[1]/a/@href'))
+    
     if(!is.null(doc.linkA)){
-        
+        #Agafo url de la jornada anterior i faig el canvi
+        urlActual<-paste(url,doc.linkA,sep = '') 
+        doc.html = htmlTreeParse(getURL(urlActual, ssl.verifypeer = FALSE),useInternalNodes = TRUE)
         #Agafo les dades...
-        
         #Jornada i data
         doc.textA = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[1]/div/h2', xmlValue))
         
@@ -70,22 +69,23 @@ for(i in 1:4000){
         doc.text9 = unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[5]/div[3]/ul[2]/li', xmlValue))
         # 
         # #Header premis
-        doc.text10 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[2]', xmlValue))
+        doc.text10 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[2]/td', xmlValue))
         # 
         # #Ple al 15
-        doc.text11 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[2]', xmlValue))
+        doc.text11 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[2]/td', xmlValue))
         # 
         # #14 encerts
-        doc.text12 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[3]', xmlValue))
+                                                
+        doc.text12 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[3]/td', xmlValue))
         # #13 encerts
-        doc.text13 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[4]', xmlValue))
+        doc.text13 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[4]/td', xmlValue))
         # #12 encerts
-        doc.text14 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[5]', xmlValue))
+        doc.text14 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[5]/td', xmlValue))
         # #11 encerts
-        doc.text15 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[6]', xmlValue))
+        doc.text15 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[6]/td', xmlValue))
         # #10 encerts
-        doc.text16 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[7]', xmlValue))
-        # #print(paste(doc.text2[1],doc.text3[1]))
+        doc.text16 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[2]/div/table/tbody/tr[7]/td', xmlValue))
+        
         # 
         # ###########################################################
         # # Llegim les apostes que ha fet la gent                   # 
@@ -96,14 +96,14 @@ for(i in 1:4000){
         doc.linkB =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[3]/div[2]/ul/li/div[3]/ul/li/div/h3/a/@href'))
 
         urlApostesJornada<-paste(url,doc.linkB,sep = '') 
-        # print(paste('Agafo txt de la Jornada? ',doc.linkB))
+        print(paste('Agafo txt de la Jornada? ',doc.linkB))
         if(length(grep('txt',doc.linkB))==0) {
-        #     print(paste('No agafo txt de la Jornada ',doc.textA))
+             print(paste('No agafo txt de la Jornada ',doc.textA))
              mydat<-data.frame(matrix(NA, nrow = 16, ncol = 6))
          }else{
              myfile <- getURL(URLencode(urlApostesJornada), ssl.verifyhost=FALSE, ssl.verifypeer=FALSE,.encoding = 'UTF-8',async = TRUE)
             mydat <- read.csv(textConnection(myfile), skip = 2,sep = ';',header = FALSE)
-             # print(mydat)
+             print(mydat)
         #     
          } 
         # 
@@ -114,22 +114,25 @@ for(i in 1:4000){
         # ###########################################################    
         # 
         # #partits del 1 al 14. El ple al 15 el tractem a part.
-        # df114<-cbind(doc.jornada,as.character.Date(doc.dataJornada),doc.text2,doc.text3,doc.text4,doc.text5,mydat[1:14,c(3,4,5)])
-        # colnames(df114)<-c('JORNADA','DATA','EQUIP_CASA','EQUIP_VISITANT','MARCADOR','RESULTAT','APOSTES1','APOSTESX','APOSTES2')
-        # #Todo, em falta posar un camp amb la jornada? Haig de començar a pensar en el model que vull fer.
-        # # dbWriteTable(mydb, 'RESULTATS', df114, row.names=F, append=T)
-        # print(paste('Entrant dades: ',doc.textA))
+        df114<-cbind(doc.jornada,as.character.Date(doc.dataJornada),doc.text2,doc.text3,doc.text4,doc.text5,mydat[1:14,c(3,4,5)])
+        colnames(df114)<-c('JORNADA','DATA','EQUIP_CASA','EQUIP_VISITANT','MARCADOR','RESULTAT','APOSTES1','APOSTESX','APOSTES2')
+
+        dbWriteTable(mydb, 'RESULTATS', df114, row.names=F, append=T)
+        print(paste('Entrant dades: ',doc.textA))
         # 
         # #Recaudació, encertants i premis
-        # dfRecPrem<-rbind(doc.text11[1:3],doc.text12[1:3],doc.text13[1:3],doc.text14[1:3],doc.text15[1:3],doc.text16[1:3])
-        # dfRecPrem[,2]<-gsub("\\.", "", dfRecPrem[,2])
-        # dfRecPrem[,3]<-gsub(",", ".", gsub("\\.", "", gsub('€','',dfRecPrem[,3])))
-        # dfRecPrem<-cbind(rep(doc.jornada,3),as.character.Date(rep(doc.dataJornada,3)),dfRecPrem)
-        # dfRecPrem<-as.data.frame(dfRecPrem)
-        # colnames(dfRecPrem)<-c('JORNADA','DATA','CATEGORIA','ENCERTANTS','PREMI')
-        # print(dfRecPrem)                 
-        # dbWriteTable(mydb, 'PREMIS', dfRecPrem, row.names=F, append=T)
+        dfRecPrem<-rbind(doc.text11[1:3],doc.text12[1:3],doc.text13[1:3],doc.text14[1:3],doc.text15[1:3],doc.text16[1:3])
+        dfRecPrem[,2]<-gsub("\\.", "", dfRecPrem[,2])
+        dfRecPrem[,3]<-gsub(",", ".", gsub("\\.", "", gsub('€','',dfRecPrem[,3])))
+        #TODO: fer gols a favor en contra a casa i fora??? Revisar model de Poisson etc.
+        
+        #revisar si formatejo be les dades a entrar a la BBDD
+        dfRecPrem<-cbind(rep(doc.jornada,3),as.character.Date(rep(doc.dataJornada,3)),dfRecPrem)
+        dfRecPrem<-as.data.frame(dfRecPrem)
+        colnames(dfRecPrem)<-c('JORNADA','DATA','CATEGORIA','ENCERTANTS','PREMI')
+        print(dfRecPrem)                 
+        dbWriteTable(mydb, 'PREMIS', dfRecPrem, row.names=F, append=T)
     }
 }
-# dbDisconnect(mydb)
+dbDisconnect(mydb)
 
