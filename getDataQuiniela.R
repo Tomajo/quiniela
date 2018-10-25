@@ -18,7 +18,7 @@ doc.html = htmlTreeParse(urlhttps,useInternalNodes = TRUE)
 
 #obro connexió a la base de dades
 mydb <- dbConnect(MySQL(), user='root', password='B4yesian', dbname='QUINIELA', host='127.0.0.1')
-for(i in 1:4000){
+for(i in 1:40){
     # Sys.sleep(1)
     #agafo url relativa anterior i concateno amb la url de ONLAE
     doc.linkA = unlist(xpathApply(doc.html,'//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[2]/div[1]/a/@href'))
@@ -93,17 +93,26 @@ for(i in 1:4000){
         # ###########################################################
         # 
         # #agafo link amb la estadistica de apostes que ha fet la gent, em servirà per predir quines apostes tendeix a fer la gent, etc.
-        doc.linkB =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[3]/div[2]/ul/li/div[3]/ul/li/div/h3/a/@href'))
+        doc.linkB  =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[3]/div[2]/ul/li/div[3]/ul/li/div/h3/a/@href'))
+        doc.linkB2 =unlist(xpathApply(doc.html, '//*[@id="idContainerLoteriaNacional"]/div[1]/div[2]/div/div[3]/div[3]/div[2]/ul/li/div[2]/ul/li/div/h3/a/@href'))
 
-        urlApostesJornada<-paste(url,doc.linkB,sep = '') 
+        
         print(paste('Agafo txt de la Jornada? ',doc.linkB))
-        if(length(grep('txt',doc.linkB))==0) {
+        #Miro si el txt esta en algun dels llocs previstos
+        if(length(grep('txt',doc.linkB))==0 && length(grep('txt',doc.linkB2))==0 ) {
              print(paste('No agafo txt de la Jornada ',doc.textA))
-             mydat<-data.frame(matrix(NA, nrow = 16, ncol = 6))
+             mydat<-data.frame(matrix(NA, nrow = 16, ncol = 6)) 
          }else{
+             #si no està en un lloc està en el altre, li passo el link correcte
+             if(length(grep('txt',doc.linkB))==0) {
+                 print(paste('Agafo txt de la Jornada de la segona casuística ',doc.linkB2))
+                 doc.linkB<-doc.linkB2 
+             }     
+             urlApostesJornada<-paste(url,doc.linkB,sep = '') 
              myfile <- getURL(URLencode(urlApostesJornada), ssl.verifyhost=FALSE, ssl.verifypeer=FALSE,.encoding = 'UTF-8',async = TRUE)
-            mydat <- read.csv(textConnection(myfile), skip = 2,sep = ';',header = FALSE)
+             mydat <- read.csv(textConnection(myfile), skip = 2,sep = ';',header = FALSE)
              print(mydat)
+             #TODO: Falta agafar el pronostics, formatejarlos i posar-los a BBDD.
         #     
          } 
         # 
